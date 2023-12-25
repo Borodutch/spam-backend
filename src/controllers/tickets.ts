@@ -49,11 +49,7 @@ export default class TicketsController {
       return ctx.throw(badRequest('User not found'))
     }
     // Get relevant casts
-    const twoDaysAgo = new Date(Date.now() - 1000 * 60 * 60 * 24 * 2)
-    const casts = await getCasts(
-      user.fid,
-      latestTicket?.createdAt || twoDaysAgo
-    )
+    const casts = await getCasts(user.fid, latestTicket?.createdAt)
     // Get the casts with $SPAM
     const spamCasts = casts.filter((cast) => cast.text.includes('$SPAM'))
     // Filter out casts with only $SPAM

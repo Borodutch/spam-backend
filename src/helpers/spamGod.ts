@@ -1,4 +1,8 @@
 import env from '@/helpers/env'
 import { Wallet } from 'ethers'
 
-export default new Wallet(env.PRIVATE_KEY)
+const spamGod = new Wallet(env.PRIVATE_KEY)
+
+console.log('Spam God:', spamGod.address)
+
+export default spamGod
