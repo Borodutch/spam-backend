@@ -47,10 +47,12 @@ export default class TicketsController {
     // Get relevant casts
     const casts = await getCasts(user.fid, latestTicket?.createdAt)
     // Get the casts with $SPAM
-    const spamCasts = casts.filter((cast) => cast.text.includes('$SPAM'))
+    const spamCasts = casts.filter((cast) =>
+      cast.text.toLowerCase().includes('$spam')
+    )
     // Filter out casts with only $SPAM
     const filteredSpamCasts = spamCasts.filter(
-      (cast) => cast.text.replaceAll('$SPAM', '').trim().length > 0
+      (cast) => cast.text.replaceAll(/\$spam/gi, '').trim().length > 0
     )
     // Filter out duplicates
     const uniqueSpamCasts = uniqBy(filteredSpamCasts, (cast) => cast.text)
