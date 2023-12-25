@@ -91,7 +91,11 @@ export default class TicketsController {
     let additionalForLikes = new Decimal(0)
     let additionalForRecasts = new Decimal(0)
     for (const { cast } of eligibleCastsWithHashes) {
-      baseAmount = baseAmount.add(amountPerCast)
+      const is21stOfDecember2023 =
+        +cast.timestamp >= 1703030400000 && +cast.timestamp <= 1703289600000
+      baseAmount = baseAmount
+        .add(amountPerCast)
+        .add(is21stOfDecember2023 ? amountPerCast : 0)
       const likeBonus = new Decimal(cast.reactions?.count || 0).mul(
         amountPerCast.mul(likeMultiplier)
       )
