@@ -4,7 +4,7 @@ import neynar from '@/helpers/neynar'
 import signTicket from '@/helpers/signTicket'
 import authenticate from '@/middleware/authenticate'
 import { CastHashModel } from '@/models/CastHash'
-import { Ticket, TicketModel } from '@/models/Ticket'
+import { TicketModel } from '@/models/Ticket'
 import { badRequest, forbidden } from '@hapi/boom'
 import { Context, Controller, Ctx, Flow, Get, Params } from 'amala'
 import { ethers } from 'ethers'
@@ -14,11 +14,6 @@ import Decimal from 'decimal.js'
 @Controller('/tickets')
 @Flow(authenticate)
 export default class TicketsController {
-  @Get('/:signature')
-  async ticket(@Params('signature') signature: string) {
-    return TicketModel.findOne({ signature })
-  }
-
   @Get('/')
   async tickets(@Ctx() ctx: Context) {
     const address = ctx.state.address as string
@@ -27,6 +22,7 @@ export default class TicketsController {
 
   @Get('/generate')
   async generate(@Ctx() ctx: Context) {
+    console.log('Generating ticket')
     const address = ctx.state.address as string
     // Find the latest ticket
     const latestTicket = await TicketModel.findOne(
@@ -39,9 +35,9 @@ export default class TicketsController {
       latestTicket?.createdAt &&
       latestTicket?.createdAt > new Date(Date.now() - 1000 * 60 * 60 * 24)
     ) {
-      // return ctx.throw(
-      //   forbidden('You already have a ticket generated in the last 24 hours.')
-      // )
+      return ctx.throw(
+        forbidden('You already have a ticket generated in the last 24 hours.')
+      )
     }
     // Get user
     const user = await neynar.v1.lookupUserByVerification(address)
@@ -132,6 +128,7 @@ export default class TicketsController {
         baseAmount.add(additionalForLikes).add(additionalForRecasts).toFixed(18)
       ),
     })
+    console.log('Ticket generated:', signature.signature)
     // Return the result
     return {
       baseAmount,
@@ -142,5 +139,10 @@ export default class TicketsController {
       ),
       signature,
     }
+  }
+
+  @Get('/:signature')
+  async ticket(@Params('signature') signature: string) {
+    return TicketModel.findOne({ signature })
   }
 }

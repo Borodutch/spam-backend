@@ -1,6 +1,7 @@
 import { Context, Next } from 'koa'
 import { ethers } from 'ethers'
 import getVerificationMessage from '@/helpers/getVerificationMessage'
+import { badRequest } from '@hapi/boom'
 
 export default async function (ctx: Context, next: Next) {
   try {
@@ -18,8 +19,9 @@ export default async function (ctx: Context, next: Next) {
     ctx.state.address = address
   } catch (err) {
     return ctx.throw(
-      403,
-      'Ugh oh! Something went wrong with authentication. Nowhere to report though, no one will hear you shouting into the void.'
+      badRequest(
+        'Ugh oh! Something went wrong with authentication. Nowhere to report though, no one will hear you shouting into the void.'
+      )
     )
   }
   return next()
