@@ -2,6 +2,7 @@ import contract from '@/helpers/contract'
 import neynar from '@/helpers/neynar'
 import env from '@/helpers/env'
 import { TypedContractEvent } from '@borodutch/spam-contract/dist/typechain/common'
+import { ethers } from 'ethers'
 
 function publishCast(message: string) {
   return neynar.v2.publishCast(env.SIGNER_UUID, message, {
@@ -24,7 +25,10 @@ async function handleSpamEvent(
     case contract.filters.PrayedToSpamGod.name:
       return publishCast(`${spammer} prayed to the $SPAM God! 🙏`)
     case contract.filters.ClaimedSpam.name:
-      return publishCast(`${spammer} claimed ${amount} $SPAM! 🤑`)
+      if (!amount) return
+      return publishCast(
+        `${spammer} claimed ${ethers.formatEther(amount)} $SPAM! 🤑`
+      )
     default:
       return
   }
