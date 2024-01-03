@@ -11,6 +11,7 @@ export default cleanEnv(process.env, {
   PORT: num({ default: 1337 }),
   CONTRACT: str(),
   ALCHEMY_BASE: str(),
+  SIGNER_UUID: str(),
   NEYNAR: str(),
   PRIVATE_KEY: str(),
 })
