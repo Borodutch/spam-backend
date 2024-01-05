@@ -120,16 +120,20 @@ export default class TicketsController {
             .toFixed(18)
         )}`
       ),
-      BigInt(new Date(casts[casts.length - 1].timestamp).getTime()),
-      BigInt(new Date(casts[0].timestamp).getTime())
+      BigInt(
+        new Date(
+          eligibleCastsWithHashes[casts.length - 1].cast.timestamp
+        ).getTime()
+      ),
+      BigInt(new Date(eligibleCastsWithHashes[0].cast.timestamp).getTime())
     )
     // Save ticket
     await TicketModel.create({
       address,
       signature: signature.signature,
       ticketType: 0,
-      fromDate: casts[casts.length - 1].timestamp,
-      toDate: casts[0].timestamp,
+      fromDate: eligibleCastsWithHashes[casts.length - 1].cast.timestamp,
+      toDate: eligibleCastsWithHashes[0].cast.timestamp,
       baseAmount: Number(baseAmount.toFixed(18)),
       additionalForLikes: Number(additionalForLikes.toFixed(18)),
       additionalForRecasts: Number(additionalForRecasts.toFixed(18)),
