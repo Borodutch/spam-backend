@@ -122,7 +122,9 @@ export default class TicketsController {
       ),
       BigInt(
         new Date(
-          eligibleCastsWithHashes[casts.length - 1].cast.timestamp
+          eligibleCastsWithHashes[
+            eligibleCastsWithHashes.length - 1
+          ].cast.timestamp
         ).getTime()
       ),
       BigInt(new Date(eligibleCastsWithHashes[0].cast.timestamp).getTime())
@@ -132,7 +134,9 @@ export default class TicketsController {
       address,
       signature: signature.signature,
       ticketType: 0,
-      fromDate: eligibleCastsWithHashes[casts.length - 1].cast.timestamp,
+      fromDate:
+        eligibleCastsWithHashes[eligibleCastsWithHashes.length - 1].cast
+          .timestamp,
       toDate: eligibleCastsWithHashes[0].cast.timestamp,
       baseAmount: Number(baseAmount.toFixed(18)),
       additionalForLikes: Number(additionalForLikes.toFixed(18)),
