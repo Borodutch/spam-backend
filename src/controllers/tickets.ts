@@ -117,8 +117,8 @@ export default class TicketsController {
             .toFixed(18)
         )}`
       ),
-      BigInt(new Date(casts[casts.length - 1].timestamp).getTime()),
-      BigInt(new Date().getTime())
+      BigInt(new Date(casts[0].timestamp).getTime()),
+      BigInt(casts[casts.length - 1].timestamp)
     )
     console.log('Ticket body', [
       BigInt(address),
