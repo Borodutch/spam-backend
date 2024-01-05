@@ -118,7 +118,7 @@ export default class TicketsController {
         )}`
       ),
       BigInt(new Date(casts[0].timestamp).getTime()),
-      BigInt(casts[casts.length - 1].timestamp)
+      BigInt(new Date(casts[casts.length - 1].timestamp).getTime())
     )
     console.log('Ticket body', [
       BigInt(address),
