@@ -120,6 +120,21 @@ export default class TicketsController {
       BigInt(new Date(casts[casts.length - 1].timestamp).getTime()),
       BigInt(new Date().getTime())
     )
+    console.log('Ticket body', [
+      BigInt(address),
+      BigInt(0),
+      ethers.parseEther(
+        `${Number(
+          baseAmount
+            .add(additionalForLikes)
+            .add(additionalForRecasts)
+            .toFixed(18)
+        )}`
+      ),
+      BigInt(new Date(casts[casts.length - 1].timestamp).getTime()),
+      BigInt(new Date().getTime()),
+    ])
+    console.log('Ticket signed:', JSON.stringify(signature))
     // Save ticket
     await TicketModel.create({
       address,
