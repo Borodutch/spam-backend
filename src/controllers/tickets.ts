@@ -120,31 +120,16 @@ export default class TicketsController {
             .toFixed(18)
         )}`
       ),
-      BigInt(new Date(casts[0].timestamp).getTime()),
-      BigInt(new Date(casts[casts.length - 1].timestamp).getTime())
-    )
-    console.log('Ticket body', [
-      BigInt(address),
-      BigInt(0),
-      ethers.parseEther(
-        `${Number(
-          baseAmount
-            .add(additionalForLikes)
-            .add(additionalForRecasts)
-            .toFixed(18)
-        )}`
-      ),
       BigInt(new Date(casts[casts.length - 1].timestamp).getTime()),
-      BigInt(new Date().getTime()),
-    ])
-    console.log('Ticket signed:', JSON.stringify(signature))
+      BigInt(new Date(casts[0].timestamp).getTime())
+    )
     // Save ticket
     await TicketModel.create({
       address,
       signature: signature.signature,
       ticketType: 0,
-      fromDate: casts[0].timestamp,
-      toDate: casts[casts.length - 1].timestamp,
+      fromDate: casts[casts.length - 1].timestamp,
+      toDate: casts[0].timestamp,
       baseAmount: Number(baseAmount.toFixed(18)),
       additionalForLikes: Number(additionalForLikes.toFixed(18)),
       additionalForRecasts: Number(additionalForRecasts.toFixed(18)),
