@@ -10,6 +10,7 @@ import { Context, Controller, Ctx, Flow, Get, Params } from 'amala'
 import { ethers } from 'ethers'
 import { uniqBy } from 'lodash'
 import Decimal from 'decimal.js'
+import fixTicket from '@/helpers/fixTicket'
 
 @Controller('/tickets')
 @Flow(authenticate)
@@ -17,6 +18,8 @@ export default class TicketsController {
   @Get('/')
   async tickets(@Ctx() ctx: Context) {
     const address = ctx.state.address as string
+    const tickets = await TicketModel.find({ address })
+    await Promise.all(tickets.map((t) => fixTicket(t)))
     return TicketModel.find({ address })
   }
 
