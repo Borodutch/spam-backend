@@ -108,18 +108,18 @@ export default class TicketsController {
       )
       additionalForRecasts = additionalForRecasts.add(recastBonus)
     }
+    // Get total
+    const total = Math.min(
+      Number(100),
+      Number(
+        baseAmount.add(additionalForLikes).add(additionalForRecasts).toFixed(18)
+      )
+    )
     // Sign message
     const signature = await signTicket(
       BigInt(address),
       BigInt(0),
-      ethers.parseEther(
-        `${Number(
-          baseAmount
-            .add(additionalForLikes)
-            .add(additionalForRecasts)
-            .toFixed(18)
-        )}`
-      ),
+      ethers.parseEther(`${total}`),
       BigInt(
         new Date(
           eligibleCastsWithHashes[
@@ -141,9 +141,7 @@ export default class TicketsController {
       baseAmount: Number(baseAmount.toFixed(18)),
       additionalForLikes: Number(additionalForLikes.toFixed(18)),
       additionalForRecasts: Number(additionalForRecasts.toFixed(18)),
-      total: Number(
-        baseAmount.add(additionalForLikes).add(additionalForRecasts).toFixed(18)
-      ),
+      total,
     })
     console.log('Ticket generated:', signature.signature)
     // Return the result
@@ -151,9 +149,7 @@ export default class TicketsController {
       baseAmount,
       additionalForLikes,
       additionalForRecasts,
-      total: Number(
-        baseAmount.add(additionalForLikes).add(additionalForRecasts).toFixed(18)
-      ),
+      total,
       signature,
     }
   }
