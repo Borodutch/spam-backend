@@ -6,6 +6,8 @@ import { getModelForClass, modelOptions, prop } from '@typegoose/typegoose'
 export class Ticket {
   @prop({ index: true, required: true })
   address!: string
+  @prop({ index: true, required: false })
+  fid!: number
   @prop({ index: true, required: true, unique: true })
   signature!: string
   @prop({ index: true, required: true })

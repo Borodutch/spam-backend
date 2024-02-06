@@ -27,9 +27,14 @@ export default class TicketsController {
   async generate(@Ctx() ctx: Context) {
     console.log('Generating ticket')
     const address = ctx.state.address as string
+    // Get user
+    const user = await neynar.v1.lookupUserByVerification(address)
+    if (!user) {
+      return ctx.throw(badRequest('User not found'))
+    }
     // Find the latest ticket
     const latestTicket = await TicketModel.findOne(
-      { address },
+      { $or: [{ address }, { fid: user.fid }] },
       {},
       { sort: { createdAt: -1 } }
     )
@@ -41,11 +46,6 @@ export default class TicketsController {
       return ctx.throw(
         forbidden('You already have a ticket generated in the last 24 hours.')
       )
-    }
-    // Get user
-    const user = await neynar.v1.lookupUserByVerification(address)
-    if (!user) {
-      return ctx.throw(badRequest('User not found'))
     }
     // Get relevant casts
     const casts = await getCasts(user.fid, latestTicket?.createdAt)
@@ -132,6 +132,7 @@ export default class TicketsController {
     // Save ticket
     await TicketModel.create({
       address,
+      fid: user.fid,
       signature: signature.signature,
       ticketType: 0,
       fromDate:
